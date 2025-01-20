@@ -5,33 +5,43 @@ function verificar() {
     var dia = fano[2]
     var mes = fano[1]
     var ano = fano[0]
-    var data = new Date()
-    var anoAtual = data.getUTCFullYear()
+    var anoAtual = new Date().getUTCFullYear();
     var res = document.querySelector('div#res')
 
-    if (dia < 1 || mes < 1 || ano < 1925) {
+    if (dia < 1 || mes < 1 || ano < 1920) {
         mostrarAlerta('ERRO: Verifique os dados e tente novamente!');
     } else if (dia > 31 || mes > 12 || ano > anoAtual) {
         mostrarAlerta('ERRO: Verifique os dados e tente novamente!');
     } else {
         var fsex = document.getElementsByName('radsex')
+        var idade = anoAtual - ano
 
         var dataNascimento = new Date(ano, mes - 1, dia);
         var dataAtual = new Date();
+        var mesAtual = new Date().getUTCMonth();
+        var diaAtual = new Date().getUTCDate();
 
-        // Calcula a diferença em milissegundos
-        var diferencaEmMilissegundos = dataAtual - dataNascimento;
+        if (dataAtual.getUTCMonth() < dataNascimento.getUTCMonth() ||
+            (dataAtual.getUTCMonth() === dataNascimento.getUTCMonth() && dataAtual.getUTCDate() < dataNascimento.getUTCDate())) {
+            idade--; // Se o aniversário ainda não aconteceu, subtrai um ano
+        }
 
-        // Converte a diferença para meses (aproximado)
-        var mesesTotais = diferencaEmMilissegundos / (1000 * 60 * 60 * 24 * 30.44);
+        var meses = mesAtual - (mes - 1); // A diferença de meses entre o mês atual e o mês de nascimento
+        if (meses < 0) {
+            meses += 12; // Se o mês atual é anterior ao mês de nascimento, ajusta os meses
+        }
 
-        // Calcula a parte inteira dos anos
-        var anosCompletos = Math.floor(mesesTotais / 12);
+        if (diaAtual < dia) {
+            meses--; // Se o dia atual ainda não chegou, não conta o mês completo
+        }
 
-        // Calcula os meses restantes
-        var mesesRestantes = Math.round(mesesTotais % 12);
+        // Corrige caso a diferença de meses seja negativa (ano ainda não começou)
+        if (meses < 0) {
+            meses += 12;
+        }
+
         var res = document.querySelector('div#res')
-        res.innerHTML = `idade calculada: ${anosCompletos} anos e ${mesesRestantes} meses`
+        res.innerHTML = `idade calculada: ${idade} anos e ${meses} meses`
     }
 }
 
@@ -45,5 +55,3 @@ function mostrarAlerta(mensagem) {
         alerta.remove();
     }, 3000);
 }
-
-// Ajustar a idade em meses se o dia atual for menor que o dia de nascimento
