@@ -13,7 +13,6 @@ function verificar() {
     } else if (dia > 31 || mes > 12 || ano > anoAtual) {
         mostrarAlerta('ERRO: Verifique os dados e tente novamente!');
     } else {
-        var fsex = document.getElementsByName('radsex')
         var idade = anoAtual - ano
 
         var dataNascimento = new Date(ano, mes - 1, dia);
@@ -40,8 +39,47 @@ function verificar() {
             meses += 12;
         }
 
-        var res = document.querySelector('div#res')
-        res.innerHTML = `idade calculada: ${idade} anos e ${meses} meses`
+        var fsex = document.getElementsByName('radsex')
+        var genero = ''
+        var img = document.createElement('img')
+        img.setAttribute('id', 'foto')
+
+        if (fsex[0].checked) {
+
+            if (idade >= 0 && idade < 12) {
+                genero = 'menino'
+                img.setAttribute('src', './img/menino.jpg')
+            } else if (idade < 20) {
+                genero = 'jovem homem'
+                img.setAttribute('src', './img/jovemhomem.jpg')
+            } else if (idade < 50) {
+                genero = 'adulto'
+                img.setAttribute('src', './img/homemadulto.jpg')
+            } else {
+                genero = 'idoso'
+                img.setAttribute('src', './img/idoso.jpg')
+            }
+
+        } else if (fsex[1].checked) {
+
+            if (idade >= 0 && idade < 12) {
+                genero = 'menina'
+                img.setAttribute('src', './img/menina.jpg')
+            } else if (idade < 20) {
+                genero = 'jovem mulher'
+                img.setAttribute('src', './img/jovemmulher.jpg')
+            } else if (idade < 50) {
+                genero = 'adulta'
+                img.setAttribute('src', './img/mulheradulta.jpg')
+            } else {
+                genero = 'idosa'
+                img.setAttribute('src', './img/idosa.jpg')
+            }
+        }
+
+        res.innerHTML = `Você é um(a) ${genero} com ${idade} anos e ${meses} meses`
+        res.appendChild(img)
+
     }
 }
 
